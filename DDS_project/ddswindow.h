@@ -10,6 +10,9 @@
 
 #define MHz 1000000
 
+#define _TRIGER_FREQ_SIZE 2
+#define _TRIGER_FREQ 0x20
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class ddsWindow; }
 QT_END_NAMESPACE

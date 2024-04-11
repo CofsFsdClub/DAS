@@ -71,6 +71,7 @@ ddsWindow::ddsWindow(QWidget *parent)
     ui->stop_freq->setText(QString::number(220));
     ui->sweep_time->setText(QString::number(1000));
     ui->sys_time->setText(QString::number(4));
+    ui->triger_freq->setText(QString::number(10000));
 }
 
 ddsWindow::~ddsWindow()
@@ -139,18 +140,6 @@ void ddsWindow::on_connect_dds_Button_clicked(bool checked)
 
 void ddsWindow::readData()
 {
-    //QByteArray buf;
-    //qDebug() << "readData: " ;
-    //buf = serial->readAll().toHex();
-    //if (!buf.isEmpty())
-    //{
-    //    QString str = ui->textEdit_recv->toPlainText();
-    //    str += tr(buf);
-    //    ui->textEdit_recv->clear();
-    //    ui->textEdit_recv->append(str);
-    //    qDebug() << buf ;
-    //}
-
     const QByteArray info = serial->readAll();
     QByteArray hexData = info.toHex();
     QString string;
@@ -171,12 +160,8 @@ void ddsWindow::on_para_set_Button_clicked()
     QString Q_stop_freq = ui->stop_freq->text();
     QString Q_sweep_time = ui->sweep_time->text();
     QString Q_sys_time = ui->sys_time->text();
-    //qDebug()<<"参数设置"<<checked;
+    QString Q_triger_freq = ui->triger_freq->text();
 
-    qDebug()<<"开始频率"<<Q_stat_freq.toULongLong()*MHz;
-    qDebug()<<"停止频率"<<Q_stop_freq.toULongLong()*MHz;
-    qDebug()<<"扫频时间"<<Q_sweep_time.toULongLong();
-    qDebug()<<"系统时间"<<Q_sys_time.toULongLong();
     AD9910_RAMP_Chrip_generate(Q_stat_freq.toULongLong()*MHz, Q_stop_freq.toULongLong()*MHz, Q_sweep_time.toULongLong(),Q_sys_time.toULongLong());
 
     QByteArray Data_CFR1;
@@ -233,6 +218,15 @@ void ddsWindow::on_para_set_Button_clicked()
               .arg(END_FREAME, 2, 16,QLatin1Char('0'));
     Data_Rate = QByteArray::fromHex(data_Rate.toLatin1().replace("\"",""));
 
+    QByteArray Data_Freq;
+    QString data_freq
+        = QString("%1%2%3%4%5").arg(HEAD_FREAME, 2, 16,QLatin1Char('0'))
+              .arg(_TRIGER_FREQ_SIZE+1, 2, 16,QLatin1Char('0'))
+              .arg(_TRIGER_FREQ, 2, 16,QLatin1Char('0'))
+              .arg(Q_triger_freq.toUInt(), _TRIGER_FREQ_SIZE*2, 16,QLatin1Char('0'))
+              .arg(END_FREAME, 2, 16,QLatin1Char('0'));
+    Data_Freq = QByteArray::fromHex(data_freq.toLatin1().replace("\"",""));
+
     // 写入发送缓存区
     serial->write(Data_CFR1.replace("\"",""));
     serial->write(Data_CFR2.replace("\"",""));
@@ -240,13 +234,21 @@ void ddsWindow::on_para_set_Button_clicked()
     serial->write(Data_Limit.replace("\"",""));
     serial->write(Data_Step.replace("\"",""));
     serial->write(Data_Rate.replace("\"",""));
+    serial->write(Data_Freq.replace("\"",""));
 
+    //qDebug()<<"参数设置"<<checked;
+
+    qDebug()<<"开始频率"<<Q_stat_freq.toULongLong()*MHz;
+    qDebug()<<"停止频率"<<Q_stop_freq.toULongLong()*MHz;
+    qDebug()<<"扫频时间"<<Q_sweep_time.toULongLong();
+    qDebug()<<"系统时间"<<Q_sys_time.toULongLong();
     qDebug()<<"CFR1_ALL_Hex:"<<data_cfr1.toLatin1().replace("\"","");
     qDebug()<<"CFR2_ALL_Hex:"<<data_cfr2.toLatin1().replace("\"","");
     qDebug()<<"CFR3_ALL_Hex:"<<data_cfr3.toLatin1().replace("\"","");
     qDebug()<<"Data_Limit_ALL_Hex:"<<data_Limit.toLatin1().replace("\"","");
     qDebug()<<"Data_Step_ALL_Hex:"<<data_Step.toLatin1().replace("\"","");
     qDebug()<<"Data_Rate_ALL_Hex:"<<data_Rate.toLatin1().replace("\"","");
+    qDebug()<<"Data_Freq_ALL_Hex:"<<data_freq.toLatin1().replace("\"","");
 
 }
 
