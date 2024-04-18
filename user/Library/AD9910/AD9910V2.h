@@ -59,7 +59,7 @@ enum REG_BYTE_SIZE{	_CFR1_SIZE = 4, _CFR2_SIZE = 4, _CFR3_SIZE = 4, _AUX_ADC_CON
 #define INSIDE_TRIG 1 //主控触发
 
 //串口传输的 头帧和尾帧
-#define HEAD_FREAME 0xA6
+#define HEAD_FREAME 0xAA55
 #define END_FREAME 0xCE
 
 extern struct ad9910_reg AD9910;

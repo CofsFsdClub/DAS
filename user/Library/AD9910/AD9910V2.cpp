@@ -192,7 +192,7 @@ void AD9910_RAMP_Chrip_generate(uint64_t start_freq, uint64_t stop_freq, uint64_
 	AD9910_Reg_Write(_POW, _POW_SIZE, (uint64_t)AD9910.POW);
 	AD9910_IO_UPDATE();
 	*/
-	AD9910_Phi_Convert(0);
+    //AD9910_Phi_Convert(0);
 	//ASF
 	asf[0] = 0x00; //ASF ramp [15:8]
 	asf[1] = 0x01; //ASF ramp [7:0]   set time 4ns

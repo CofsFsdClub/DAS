@@ -10,8 +10,11 @@
 
 #define MHz 1000000
 
-#define _TRIGER_FREQ_SIZE 2
-#define _TRIGER_FREQ 0x20
+#define _PILSE_POSITION_SIZE 2
+#define _PILSE_POSITION 0x20
+
+#define _PULSE_SIZE 2
+#define _PULSE 0x21
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ddsWindow; }
@@ -32,6 +35,10 @@ private slots:
     void on_pushButton_clicked();
 
     void readData();
+
+    void on_para_set_Button_2_clicked();
+
+    void on_para_initial_Button_clicked();
 
 private:
     Ui::ddsWindow *ui;
